@@ -1,8 +1,7 @@
 import os
 import shutil
 from tkinter import messagebox
-from datetime import datetime
-from metadata_manager import MetadataManager
+
 
 class RestoreManager:
     def __init__(self, target_directory, restore_directory):

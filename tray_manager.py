@@ -3,6 +3,7 @@ from pystray import Icon, MenuItem, Menu
 from PIL import Image, ImageDraw
 from backup_manager import BackupManager
 from restore_manager import RestoreManager
+from integrity_checker import IntegrityChecker
 # Глобальные переменные
 source_directory = None
 target_directory = None
@@ -88,6 +89,12 @@ def restore_differential_backup(icon, item):
         manager = RestoreManager(target_dir, restore_dir)
         manager.restore_from_differential_backup()
 
+def check_backup_integrity(icon, item):
+    backup_dir = select_directory("Выберите директорию с резервной копией для проверки")
+    if backup_dir:
+        checker = IntegrityChecker(backup_dir)
+        checker.check_backup_integrity()
+
 
 def quit_app(icon, item):
     icon.stop()
@@ -107,6 +114,7 @@ def create_tray_menu():
             MenuItem("Инкрементальное восстановление", restore_incremental_backup),
             MenuItem("Дифференциальное восстановление", restore_differential_backup)
         )),
+        MenuItem("Проверка целостности", check_backup_integrity),
         MenuItem("Выход", quit_app)
     )
 
