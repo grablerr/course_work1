@@ -9,7 +9,7 @@ class IntegrityChecker:
     def check_backup_integrity(self):
         """Проверяет целостность всех файлов резервной копии."""
         try:
-            metadata = MetadataManager.load_metadata(self.backup_directory)
+            metadata = MetadataManager.load_metadata_for_integrity(self.backup_directory)
             if not metadata["files"]:
                 messagebox.showwarning("Предупреждение", "Метаданные отсутствуют или повреждены.")
                 return

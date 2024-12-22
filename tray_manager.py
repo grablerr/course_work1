@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw
 from backup_manager import BackupManager
 from restore_manager import RestoreManager
 from integrity_checker import IntegrityChecker
+
 # Глобальные переменные
 source_directory = None
 target_directory = None
@@ -68,33 +69,18 @@ def force_backup(icon, item):
     elif backup_type == "differential":
         backup_manager.differential_backup()
 
-def restore_full_backup(icon, item):
+def restore_auto(icon, item):
     target_dir = select_directory("Выбор директории с резервными копиями")
     restore_dir = select_directory("Выбор директории для восстановления")
     if target_dir and restore_dir:
         manager = RestoreManager(target_dir, restore_dir)
-        manager.restore_from_full_backup()
-
-def restore_incremental_backup(icon, item):
-    target_dir = select_directory("Выбор директории с резервными копиями")
-    restore_dir = select_directory("Выбор директории для восстановления")
-    if target_dir and restore_dir:
-        manager = RestoreManager(target_dir, restore_dir)
-        manager.restore_from_incremental_backup()
-
-def restore_differential_backup(icon, item):
-    target_dir = select_directory("Выбор директории с резервными копиями")
-    restore_dir = select_directory("Выбор директории для восстановления")
-    if target_dir and restore_dir:
-        manager = RestoreManager(target_dir, restore_dir)
-        manager.restore_from_differential_backup()
+        manager.auto_restore()
 
 def check_backup_integrity(icon, item):
     backup_dir = select_directory("Выберите директорию с резервной копией для проверки")
     if backup_dir:
         checker = IntegrityChecker(backup_dir)
         checker.check_backup_integrity()
-
 
 def quit_app(icon, item):
     icon.stop()
@@ -109,12 +95,7 @@ def create_tray_menu():
             MenuItem("Дифференциальное", set_backup_type_differential)
         )),
         MenuItem("Принудительное копирование", force_backup),
-        MenuItem("Восстановление данных", Menu(
-            MenuItem("Полное восстановление", restore_full_backup),
-            MenuItem("Инкрементальное восстановление", restore_incremental_backup),
-            MenuItem("Дифференциальное восстановление", restore_differential_backup)
-        )),
+        MenuItem("Автоматическое восстановление", restore_auto),
         MenuItem("Проверка целостности", check_backup_integrity),
         MenuItem("Выход", quit_app)
     )
-

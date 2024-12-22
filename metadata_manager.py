@@ -11,6 +11,18 @@ class MetadataManager:
     @staticmethod
     def load_metadata(target_dir):
         try:
+            metadata_file = MetadataManager.get_metadata_file(target_dir)
+            if os.path.exists(metadata_file):
+                with open(metadata_file, "r", encoding="utf-8") as file:
+                    return json.load(file)
+            return {"last_full_backup": None, "last_diff_backup": None, "files": {}}
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Ошибка при загрузке метаданных: {e}")
+            return {"last_full_backup": None, "last_diff_backup": None, "files": {}}
+
+    @staticmethod
+    def load_metadata_for_integrity(target_dir):
+        try:
             parent_dir = os.path.dirname(target_dir)
             metadata_file = os.path.join(parent_dir, "backup_metadata.json")
 
