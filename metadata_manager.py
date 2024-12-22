@@ -11,24 +11,30 @@ class MetadataManager:
     @staticmethod
     def load_metadata(target_dir):
         try:
-            metadata_file = MetadataManager.get_metadata_file(target_dir)
+            parent_dir = os.path.dirname(target_dir)
+            metadata_file = os.path.join(parent_dir, "backup_metadata.json")
+
             if os.path.exists(metadata_file):
                 with open(metadata_file, "r", encoding="utf-8") as file:
                     return json.load(file)
-            return {"last_full_backup": None, "last_diff_backup": None, "files": {}}
+
+            return {"last_full_backup": None, "last_diff_backup": None,
+                    "files": {}}
         except Exception as e:
-            messagebox.showerror("Ошибка", f"Ошибка при загрузке метаданных: {e}")
-            return {"last_full_backup": None, "last_diff_backup": None, "files": {}}
+            messagebox.showerror("Ошибка",
+                                 f"Ошибка при загрузке метаданных: {e}")
+            return {"last_full_backup": None, "last_diff_backup": None,
+                    "files": {}}
 
     @staticmethod
     def save_metadata(target_dir, metadata):
         try:
             metadata_file = MetadataManager.get_metadata_file(target_dir)
             temp_metadata_file = metadata_file + ".tmp"
-            # Сохраняем в временный файл
+
             with open(temp_metadata_file, "w", encoding="utf-8") as temp_file:
                 json.dump(metadata, temp_file, indent=4, ensure_ascii=False)
-            # Заменяем временный файл на основной
+
             os.replace(temp_metadata_file, metadata_file)
         except Exception as e:
             messagebox.showerror("Ошибка", f"Ошибка при сохранении метаданных: {e}")

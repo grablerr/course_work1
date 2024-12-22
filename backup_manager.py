@@ -25,7 +25,7 @@ class BackupManager:
         try:
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             shutil.copy2(src, dest)
-            # Рассчитываем хеш файла и добавляем его в метаданные
+
             file_hash = MetadataManager.calculate_file_hash(src)
             if file_hash:
                 relative_path = os.path.relpath(src, self.source_directory)
@@ -59,7 +59,7 @@ class BackupManager:
                                                     self.source_directory)
                     dest_path = os.path.join(backup_dir, relative_path)
                     self.copy_file(src_path, dest_path,
-                                   metadata)  # Передаем metadata
+                                   metadata)
             MetadataManager.save_metadata(self.target_directory, metadata)
 
             messagebox.showinfo("Успех",
@@ -148,7 +148,7 @@ class BackupManager:
                     dest_path = os.path.join(backup_dir, relative_path)
                     file_mtime = os.path.getmtime(src_path)
 
-                    # Проверяем добавленные или измененные файлы
+
                     if relative_path not in metadata["files"]:
                         print(
                             f"Новый файл {relative_path}, добавляем в резервную копию.")
@@ -165,7 +165,7 @@ class BackupManager:
             metadata["last_diff_backup"] = datetime.now().isoformat()
             MetadataManager.save_metadata(self.target_directory, metadata)
 
-            # Если папка пустая, удаляем ее
+
             if not files_copied:
                 if os.path.exists(backup_dir) and not os.listdir(backup_dir):
                     os.rmdir(backup_dir)
